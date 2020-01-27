@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/item_skin"
+    android:background="@drawable/ic_card_bg"
+    android:descendantFocusability="blocksDescendants">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/theme_card_image"
+            style="@style/item_skin_skinImage"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/card_image_height"
+            android:contentDescription="@null" />
+
+        <ImageView
+            style="@style/item_skin_skinImageOverlay"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/card_image_height"
+            android:contentDescription="@null"
+            android:scaleType="centerInside" />
+
+        <ImageView
+            android:id="@+id/theme_card_acted_overlay"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/card_image_height"
+            android:background="@color/theme_acted_overlay"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_check"
+            tools:visibility="gone" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/theme_card_title"
+        style="@style/item_skin_skinTitle"
+        android:layout_gravity="bottom"
+        android:ellipsize="end"
+        android:lines="@integer/item_skin_title_max_rows"
+        android:maxLines="@integer/item_skin_title_max_rows" />
+
+</LinearLayout>
