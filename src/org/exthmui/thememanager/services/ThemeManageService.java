@@ -257,8 +257,6 @@ public class ThemeManageService extends Service {
 
         List<PackageInfo> allPackages = mPackageManager.getInstalledPackages(0);
         List<String> whiteList = bundle.getStringArrayList("whitelist");
-        Intent intent = new Intent(this, getClass());
-        PendingIntent sender = PendingIntent.getActivity(this, 0, intent, 0);
 
         boolean uninstallFlag = bundle.getBoolean("uninstall");
         int userId = UserHandle.myUserId();
@@ -282,7 +280,7 @@ public class ThemeManageService extends Service {
 
                 // uninstall
                 if (uninstallFlag) {
-                    mPackageInstaller.uninstall(ai.packageName, sender.getIntentSender());
+                    mPackageInstaller.uninstall(ai.packageName, createIntentSender(this,1, "uninstall_overlay"));
                 }
             }
         }

@@ -100,7 +100,7 @@ public class MainActivity extends Activity {
         mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                askUninstallTheme(mThemesList.get(position));
+                askUninstallTheme(position);
                 return true;
             }
         });
@@ -115,7 +115,8 @@ public class MainActivity extends Activity {
 
     }
 
-    private void askUninstallTheme(Theme theme) {
+    private void askUninstallTheme(int index) {
+        Theme theme = mThemesList.get(index);
         if (theme.isSystemPackage()) return;
         new AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_remove_package_title)
@@ -123,14 +124,35 @@ public class MainActivity extends Activity {
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     // do uninstall
-                    Intent intent = new Intent(Intent.ACTION_DELETE, Uri.parse("package:" + theme.getPackageName()));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    String uninstallId = "uninstall_" + theme.getPackageName();
+                    setReceiver(uninstallId, index);
+                    getPackageManager().getPackageInstaller().uninstall(theme.getPackageName(), createIntentSender(this, uninstallId));
+
                 })
                 .setNegativeButton(android.R.string.cancel,  (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                 })
                 .show();
+    }
+
+    private void setReceiver(String receiverId, final int index) {
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                context.unregisterReceiver(this);
+                int statusCode = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
+
+                boolean successFlag = PackageInstaller.STATUS_SUCCESS == statusCode;
+                if (successFlag) {
+                    mThemeDataBinder.removeItemOnList(index);
+                }
+            }
+        }, new IntentFilter(receiverId));
+    }
+
+    private static IntentSender createIntentSender(Context context, String name) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(name), 0);
+        return pendingIntent.getIntentSender();
     }
 
     @Override
