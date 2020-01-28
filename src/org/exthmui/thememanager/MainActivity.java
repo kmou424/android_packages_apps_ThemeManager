@@ -19,15 +19,22 @@ package org.exthmui.thememanager;
 import android.app.Activity;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -171,7 +178,7 @@ public class MainActivity extends Activity {
                 }
 
                 @Override
-                public void onThemeListSetListener(List<Theme> val) {
+                public void onThemeListChangedListener(List<Theme> val) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

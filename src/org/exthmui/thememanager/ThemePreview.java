@@ -146,7 +146,7 @@ public class ThemePreview extends Activity {
             }
 
             @Override
-            public void onThemeListSetListener(List<Theme> val) {
+            public void onThemeListChangedListener(List<Theme> val) {
             }
         };
 

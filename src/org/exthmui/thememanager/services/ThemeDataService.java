@@ -54,6 +54,14 @@ public class ThemeDataService extends Service {
             mThemeDataUpdateListenerList.remove(themeDataUpdateListener);
         }
 
+        public void removeItemOnList(int index) {
+            mThemeList.remove(index);
+            if (mThemeDataUpdateListenerList == null) return;
+            for (ThemeDataUpdateListener listener : mThemeDataUpdateListenerList) {
+                listener.onThemeListChangedListener(mThemeList);
+            }
+        }
+
         public void setIsApplying(boolean val) {
             isApplying = val;
             if (mThemeDataUpdateListenerList == null) return;
@@ -82,7 +90,7 @@ public class ThemeDataService extends Service {
             mThemeList = themes;
             if (mThemeDataUpdateListenerList == null) return;
             for (ThemeDataUpdateListener listener : mThemeDataUpdateListenerList) {
-                listener.onThemeListSetListener(themes);
+                listener.onThemeListChangedListener(themes);
             }
         }
 
@@ -94,7 +102,7 @@ public class ThemeDataService extends Service {
 
     public interface ThemeDataUpdateListener {
         void onApplyingListener(boolean val);
-        void onThemeListSetListener(List<Theme> val);
+        void onThemeListChangedListener(List<Theme> val);
         void onActedPackageChangeListener(String val);
     }
 }
