@@ -79,7 +79,7 @@
                     android:enabled="false"
                     android:gravity="center"
                     android:text="@string/skin_picker_button_apply"
-                    android:theme="@style/Theme.Picker.ApplySkinButton" />
+                    style="@style/Button_Outline" />
 
                 <LinearLayout
                     android:id="@+id/layout_targets"
