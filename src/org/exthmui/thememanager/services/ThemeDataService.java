@@ -30,6 +30,9 @@ public class ThemeDataService extends Service {
 
     private final static String TAG = "ThemeDataService";
 
+    public final static String LIST_ACT_ADD = "add";
+    public final static String LIST_ACT_REMOVE = "remove";
+
     private List<Theme> mThemeList;
     private boolean isApplying;
     private String mActedPackage;
@@ -54,11 +57,19 @@ public class ThemeDataService extends Service {
             mThemeDataUpdateListenerList.remove(themeDataUpdateListener);
         }
 
+        public void addItemToList(int index, Theme val) {
+            mThemeList.add(index, val);
+            if (mThemeDataUpdateListenerList == null) return;
+            for (ThemeDataUpdateListener listener : mThemeDataUpdateListenerList) {
+                listener.onThemeListChangedListener(index, LIST_ACT_ADD, val);
+            }
+        }
+
         public void removeItemOnList(int index) {
             mThemeList.remove(index);
             if (mThemeDataUpdateListenerList == null) return;
             for (ThemeDataUpdateListener listener : mThemeDataUpdateListenerList) {
-                listener.onThemeListChangedListener(mThemeList);
+                listener.onThemeListChangedListener(index, LIST_ACT_REMOVE, null);
             }
         }
 
@@ -88,10 +99,6 @@ public class ThemeDataService extends Service {
 
         public void setThemeList(List<Theme> themes) {
             mThemeList = themes;
-            if (mThemeDataUpdateListenerList == null) return;
-            for (ThemeDataUpdateListener listener : mThemeDataUpdateListenerList) {
-                listener.onThemeListChangedListener(themes);
-            }
         }
 
         public List<Theme> getThemeList() {
@@ -102,7 +109,7 @@ public class ThemeDataService extends Service {
 
     public interface ThemeDataUpdateListener {
         void onApplyingListener(boolean val);
-        void onThemeListChangedListener(List<Theme> val);
+        void onThemeListChangedListener(int index, String act, Theme val);
         void onActedPackageChangeListener(String val);
     }
 }

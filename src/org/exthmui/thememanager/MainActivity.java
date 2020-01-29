@@ -166,6 +166,10 @@ public class MainActivity extends Activity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mThemeManageBinder = (ThemeManageService.ThemeManageBinder) iBinder;
+
+            mThemesList.addAll(mThemeManageBinder.getThemesList());
+            mThemeAdapter.notifyDataSetChanged();
+
             bindService(mThemeDataService, mThemeDataConn, Context.BIND_AUTO_CREATE);
         }
 
@@ -174,7 +178,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private class ThemeDataConn implements ServiceConnection{
+    private class ThemeDataConn implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mThemeDataBinder = (ThemeDataService.ThemeDataBinder) iBinder;
@@ -200,19 +204,17 @@ public class MainActivity extends Activity {
                 }
 
                 @Override
-                public void onThemeListChangedListener(List<Theme> val) {
+                public void onThemeListChangedListener(int index,String act, Theme val) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mThemesList.clear();
-                            mThemesList.addAll(val);
                             if (mThemeAdapter != null) mThemeAdapter.notifyDataSetChanged();
                         }
                     });
                 }
             });
 
-            mThemeDataBinder.setThemeList(mThemeManageBinder.getThemesList());
+            mThemeDataBinder.setThemeList(mThemesList);
         }
 
         @Override
